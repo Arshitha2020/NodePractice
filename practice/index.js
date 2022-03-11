@@ -5,7 +5,7 @@ const url = require("url");
 fs.readFile("filee.txt", "utf-8", (err, data) => {
   const data1 = data;
   console.log(data1);
-}
+});
 fs.readFile("file1.txt", "utf-8", (err, data) => {
   console.log(data);
 });
