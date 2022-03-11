@@ -2,22 +2,30 @@ const http = require("http");
 const fs = require("fs");
 const url = require("url");
 
-const data = fs.readFileSync(`${__dirname}/file1.txt`, "utf-8");
+fs.readFile("file1.txt", "utf-8", (err, data) => {
+  console.log(data);
+});
 
-http
-  .createServer(function (req, res) {
-    const { query, pathName } = url.parse(req.url, true);
-    //res.write(query)
-    if (pathName === "/home") {
-      res.writeHead(200, { "Content-type": "text/html" });
-      res.write(data);
-      res.end();
-    } else if (pathName === "/") {
-      res.writeHead(200, { "Content-type": "text/html" });
-      res.end("Hello");
-    }
-  })
-  .listen(3000);
+const server = http.createServer(function (req, res) {
+  const { query, pathName } = url.parse(req.url, true);
+  //res.write(query)
+  if (pathName === "/home") {
+    res.writeHead(200, { "Content-type": "text/plain" });
+    res.end(data);
+  } else if (pathName === "/") {
+    res.writeHead(200, { "Content-type": "text/plain" });
+    res.end("Hello");
+  } else {
+    res.writeHead(404, {
+      "Content-type": "text/html", //browser noe expects some html
+      "my-Own-header": "I am awesome",
+    }); //It also sends headers
+    res.end("<h1>Page not found</h1>");
+  }
+});
+server.listen(8090, () => {
+  console.log("Listenening to requests on port 8080"); // we started to listen to incoming requests on local host IP and port
+});
 
 console.log("You ran");
 //console.log(name);
